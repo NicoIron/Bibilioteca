@@ -3,6 +3,7 @@ class platForm
 {
     private $id;
     private $name;
+    private $namePlatform;
 
     public function __construct($idPlatform = null, $namePlatform = null)
     {
@@ -54,7 +55,7 @@ class platForm
 
 
 
-    public function getAll()
+    public function consultMovie()
     {
         $mysqli = $this->initDB();
         $query = $mysqli->query("select * from Series");
@@ -68,5 +69,22 @@ class platForm
 
         $mysqli->close();
         return $listData;
+    }
+
+
+    public function consulListPlataforma()
+    {
+        $mysqli = $this->initDB();
+        $query = $mysqli->query("SELECT * FROM Plataformas");
+        $listPlataformas = [];
+
+        // Utilizamos fetch_assoc() para obtener los resultados como un array asociativo.
+        while ($itemPlataform = $query->fetch_assoc()) {
+            $item = new PlatForm($itemPlataform["ID_Plataforma"], $itemPlataform["Nombre_Plataforma"]);
+            array_push($listPlataformas, $item);
+        }
+
+        $mysqli->close();
+        return $listPlataformas;
     }
 }
