@@ -1,100 +1,75 @@
 <?php
-require_once('/Users/adminvass/Documents/Maestria/Back_End/Actividad1/Proyecto_2/models/PlatForm.php');
 class insertMovie
 {
+    private $conn;
 
-    private $id;
-    private $tituloMovie;
-    private $idPlataforma_serie; //tengo que sacarlo en una lista
-    private $IdDirector_Serie;
-    private $IdActor_Serie;
-    private $idIdioma_Serie;
-    private $idiomaAudio;
-    private $idiomaSubtitulo;
-
-    public function __construct($idMovie = null, $idTituloMovie = null, $idPlataformaSerie = null, $idDirectorSerie = null, $idActorSerie = null, $idIdiomaSerie = null)
+    public function __construct($conn)
     {
-        $this->id = $idMovie;
-        $this->tituloMovie = $idTituloMovie;
-        $this->idPlataforma_serie = $idPlataformaSerie;
-        $this->IdDirector_Serie = $idDirectorSerie;
-        $this->IdActor_Serie = $idActorSerie;
-        $this->idIdioma_Serie = $idIdiomaSerie;
+        $this->conn = $conn;
     }
 
-    public function setIdiomaSerie($idIdioma_Serie)
+    // Función para verificar si la serie ya existe
+    public function serieExistente($nombreSerie)
     {
-        $this->idIdioma_Serie = $idIdioma_Serie;
+        // Preparamos la consulta para verificar si la serie ya existe
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM Series WHERE Titulo_Serie = ?");
+        $stmt->bind_param('s', $nombreSerie); // Vinculamos el parámetro de entrada
+        $stmt->execute();
+
+        // Obtenemos el resultado de la consulta
+        $stmt->bind_result($count);
+        $stmt->fetch();
+
+        // Cerramos la consulta
+        $stmt->close();
+
+        // Si el conteo es mayor que 0, significa que ya existe una serie con ese nombre
+        return $count > 0;
     }
 
-    public function setIdActor_Serie($IdActor_Serie)
+    // Función para insertar una nueva serie
+    function insertSerie($nombreSerie, $idPlataforma, $idDirector, $idActor, $idIdioma, $idiomaAudio, $idiomaSubtitulo)
     {
-        $this->IdActor_Serie = $IdActor_Serie;
-    }
+        // Crear conexión con la base de datos
+        $model = new PlatForm();
+        $conn = $model->initDB();
 
-    public function setIdDirector_Serie($IdDirector_Serie)
-    {
-        $this->IdDirector_Serie = $IdDirector_Serie;
-    }
+        // Convertir valores de audio y subtítulos a enteros válidos (0 o 1)
+        $idiomaAudio = isset($idiomaAudio) && $idiomaAudio ? 1 : 0;
+        $idiomaSubtitulo = isset($idiomaSubtitulo) && $idiomaSubtitulo ? 1 : 0;
 
-    public function setTituloMovie($tituloMovie)
-    {
-        $this->tituloMovie = $tituloMovie;
-    }
+        // Preparar la consulta
+        $stmt = $conn->prepare("
+        INSERT INTO Series 
+        (Titulo_Serie, IDPlataforma_serie, IDDirector_Serie, IDActores_serie, IDIdiomas_serie, IdiomaAudio_Idioma, IdiomaSubtitulo_Idioma) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
 
-    public function setIdPlataforma_serie($idPlataforma_serie)
-    {
-        $this->idPlataforma_serie = $idPlataforma_serie;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getTituloMovie()
-    {
-        return $this->tituloMovie;
-    }
-
-    public function getIdPlataforma_serie()
-    {
-        return $this->idPlataforma_serie;
-    }
-
-    public function getIdDirector_Serie()
-    {
-        return $this->IdDirector_Serie;
-    }
-
-    public function getIdActor_Serie()
-    {
-        return $this->IdActor_Serie;
-    }
-
-    public function getIdIdioma_Serie()
-    {
-        return $this->idIdioma_Serie;
-    }
-
-
-
-    public function funct_insertSerie()
-    {
-        $platFormCreate = false;
-
-        $platfom = new platForm();
-        $mysqli = $platfom->initDB();
-
-        if ($resulInsert = $mysqli->query("INSERT INTO Series (ID_Serie, Titulo_Serie, IDPlataforma_serie, IDDirector_Serie, IDActores_serie, IDIdiomas_serie,IdiomaAudio_Idioma,IdiomaSubtitulo_Idioma)
-              VALUES ('$this->id', '$this->tituloMovie', '$this->idPlataforma_serie', '$this->IdDirector_Serie', '$this->IdActor_Serie', '$this->idIdioma_Serie')")) {
-            $platFormCreate = true;
+        if (!$stmt) {
+            die("Error al preparar la consulta: " . $conn->error);
         }
-        $mysqli->close();
+
+        // Asignar los parámetros- me toco hacerlo ya que no pude de otra manera
+        $stmt->bind_param(
+            'siiiiii',
+            $nombreSerie,
+            $idPlataforma,
+            $idDirector,
+            $idActor,
+            $idIdioma,
+            $idiomaAudio,
+            $idiomaSubtitulo
+        );
+
+        // Ejecutar la consulta
+        if ($stmt->execute()) {
+            echo '<div class="alert alert-success" role="alert">Serie creada con éxito.</div>';
+        } else {
+            echo '<div class="alert alert-danger" role="alert">Error al crear la serie: ' . $stmt->error . '</div>';
+        }
+
+        // Cerrar el query y la conexión
+        $stmt->close();
+        $conn->close();
     }
 }

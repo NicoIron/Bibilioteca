@@ -3,12 +3,13 @@ class platForm
 {
     private $id;
     private $name;
-    private $namePlatform;
+    private $apellido;
 
-    public function __construct($idPlatform = null, $namePlatform = null)
+    public function __construct($idPlatform = null, $namePlatform = null, $apellidoDirect = null)
     {
         $this->id = $idPlatform;
         $this->name = $namePlatform;
+        $this->apellido = $apellidoDirect;
     }
 
     public function getId()
@@ -24,6 +25,10 @@ class platForm
     public function getName()
     {
         return $this->name;
+    }
+    public function getApellidoDirector()
+    {
+        return $this->apellido;
     }
 
     public function setName($name)
@@ -53,22 +58,69 @@ class platForm
         return $mysqli;
     }
 
-
-
-    public function consultMovie()
+    public function serieExistente($nombreSerie)
     {
         $mysqli = $this->initDB();
-        $query = $mysqli->query("select * from Series");
-        $listData = [];
 
-        foreach ($query as $item) {
-            # code...
-            $itemObject = new platForm($item['ID_Serie'], $item['Titulo_Serie']);
-            array_push($listData, $itemObject);
+        // Preparamos la consulta para buscar el nombre de la serie
+        $stmt = $mysqli->prepare("SELECT COUNT(*) FROM series WHERE nombre = ?");
+        $stmt->bind_param('s', $nombreSerie);  // Vinculamos el parámetro de entrada
+        $stmt->execute(); // Ejecutamos la consulta
+
+        // Obtenemos el resultado de la consulta
+        $stmt->bind_result($count);
+        $stmt->fetch();
+
+        // Cerramos la consulta
+        $stmt->close();
+        $mysqli->close();
+
+        // Si el conteo es mayor que 0, significa que ya existe una serie con ese nombre
+        return $count > 0;
+    }
+
+
+    public function consultActor()
+    {
+        $mysqli = $this->initDB();
+        $query = $mysqli->query("Select * from Actores");
+        $listActores = [];
+
+        while ($itemListActor = $query->fetch_assoc()) {
+            $item = new platForm(
+                $itemListActor["ID_Actor"],
+                $itemListActor["Nombre_Actor"],
+                $itemListActor["Apellidos_Actor"]
+            );
+            array_push(
+                $listActores,
+                $item
+            );
+        }
+        $mysqli->close();
+        return $listActores;
+    }
+
+
+    public function consultDirector()
+    {
+        $mysqli = $this->initDB();
+        $query = $mysqli->query("select * from Directores");
+        $listDirector = [];
+
+        while ($itemlistDirector = $query->fetch_assoc()) {
+            $item = new platForm(
+                $itemlistDirector["ID_Director"],
+                $itemlistDirector["Nombre_Director"],
+                $itemlistDirector["Apellidos_Director"],
+                $itemlistDirector["FechaNacimiento_Director"],
+                $itemlistDirector["Nacionalidad_Director"]
+            );
+            array_push($listDirector, $item);
         }
 
         $mysqli->close();
-        return $listData;
+        return $listDirector;
     }
 
 
