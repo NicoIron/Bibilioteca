@@ -39,7 +39,7 @@ class eliminarRegistro
     }
 
     // Eliminar el director
-    function eliminarRegistroActor($platformId)
+    function eliminarRegistroDirector($platformId)
     {
         $id = (int)$platformId;
 

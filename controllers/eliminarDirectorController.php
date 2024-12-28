@@ -21,7 +21,7 @@ function eliminarController($platformId)
     }
 
     // Si no hay series relacionadas, proceder con la eliminación
-    $resultado = $newPlatform->eliminarRegistroActor($platformId);
+    $resultado = $newPlatform->eliminarRegistroDirector($platformId);
 
     if (!$resultado) {
         // Si no se puede eliminar el director, retornamos el mensaje de error
