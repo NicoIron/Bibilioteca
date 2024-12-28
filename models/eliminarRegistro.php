@@ -8,15 +8,44 @@ class eliminarRegistro
         $this->conecDB = $conecDB;
     }
 
-    //Buscar Registro de Actor que quiero Eliminar
-    function eliminarRegistroActor($platformId)
+    // Verificar si existen series relacionadas con el director
+    function verificarSeriesRelacionadas($platformId)
     {
-        // Convertir el ID a entero y asignarlo a $id
         $id = (int)$platformId;
 
-        // Verificar si el ID es mayor que 0 (ya que 0 no es un ID válido)
+        // Verificar si el ID es mayor que 0
         if ($id <= 0) {
             echo "El ID debe ser un número entero válido mayor que 0. ID recibido: $id";
+            return false;
+        }
+
+        // Preparar la consulta para verificar si existen series relacionadas con este director
+        $sentencia = $this->conecDB->prepare("SELECT COUNT(*) AS total FROM series WHERE IDDirector_Serie = ?");
+        $sentencia->bind_param('i', $id);
+
+        // Ejecutar la consulta
+        if (!$sentencia->execute()) {
+            echo "Error al ejecutar la consulta de verificación de series: " . $this->conecDB->error;
+            return false;
+        }
+
+        // Obtener el resultado de la consulta
+        $resultado = $sentencia->get_result();
+        $registro = $resultado->fetch_assoc();
+        $sentencia->close();
+
+        // Si hay series asociadas, retornar true
+        return $registro['total'] > 0;
+    }
+
+    // Eliminar el director
+    function eliminarRegistroActor($platformId)
+    {
+        $id = (int)$platformId;
+
+        // Verificar si el ID es mayor que 0
+        if ($id <= 0) {
+            echo "El ID debe ser un número entero válido mayor que 0.";
             return false;
         }
 
