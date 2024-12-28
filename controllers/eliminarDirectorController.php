@@ -47,10 +47,10 @@ if (isset($_POST['BorrarItemDirector']) && isset($_POST['platformId'])) {
 
     // Si el resultado es un mensaje da error, redirigir con el mensaje
     if ($resultado !== true) {
-        header("Location: ../views/list.php?error=" . urlencode($resultado)); // Redirigir con el mensaje de error
+        header("Location: ../views/ViewDirector.php?error=" . urlencode($resultado)); // Redirigir con el mensaje de error
         exit;
     } else {
-        header("Location: ../views/list.php?success=1" . urlencode($resultado));
+        header("Location: ../views/ViewDirector.php?success=1" . urlencode($resultado));
         exit;
     }
 }
