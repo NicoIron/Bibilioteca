@@ -24,3 +24,9 @@ function listSeries()
         'platformActor' => $platformActor
     ];
 }
+// Obtener la lista de plataformas y directores
+$data = listSeries();
+$peliculaList = $data['peliculaList'];
+$plataformList = $data['plataformList'];
+$platformDirect = $data['platformDirect'];
+$platformActor = $data['platformActor'];
