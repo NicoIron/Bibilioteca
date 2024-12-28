@@ -1,5 +1,5 @@
 <?php
-require_once('/Users/adminvass/Documents/Maestria/Back_End/Actividad1/Proyecto_2/controllers/PlatformController.php');
+require_once('/Users/adminvass/Documents/Maestria/Back_End/Actividad1/Proyecto_2/controllers/serieController.php');
 
 // Asegúrate de que $data ha sido pasado correctamente desde el controlador
 $plataformList = $data['plataformList'];

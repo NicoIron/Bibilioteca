@@ -63,16 +63,16 @@ class platForm
         $mysqli = $this->initDB();
 
         // Preparamos la consulta para buscar el nombre de la serie
-        $stmt = $mysqli->prepare("SELECT COUNT(*) FROM series WHERE nombre = ?");
-        $stmt->bind_param('s', $nombreSerie);  // Vinculamos el parámetro de entrada
-        $stmt->execute(); // Ejecutamos la consulta
+        $sentencia = $mysqli->prepare("SELECT COUNT(*) FROM series WHERE nombre = ?");
+        $sentencia->bind_param('s', $nombreSerie);  // Vinculamos el parámetro de entrada
+        $sentencia->execute(); // Ejecutamos la consulta
 
         // Obtenemos el resultado de la consulta
-        $stmt->bind_result($count);
-        $stmt->fetch();
+        $sentencia->bind_result($count);
+        $sentencia->fetch();
 
         // Cerramos la consulta
-        $stmt->close();
+        $sentencia->close();
         $mysqli->close();
 
         // Si el conteo es mayor que 0, significa que ya existe una serie con ese nombre
