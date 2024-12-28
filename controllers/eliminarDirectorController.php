@@ -4,7 +4,7 @@ require_once('/Users/adminvass/Documents/Maestria/Back_End/Actividad1/Proyecto_2
 
 
 
-// Dentro del controlador (eliminarActorController.php)
+// Dentro del controlador (eliminarDirectorController.php)
 function eliminarController($platformId)
 {
     // Crear una instancia del modelo PlatForm
@@ -45,13 +45,12 @@ if (isset($_POST['BorrarItemDirector']) && isset($_POST['platformId'])) {
 
     $resultado = eliminarController($platformIdInt);
 
-    // Si el resultado es un mensaje de error, redirigir con el mensaje
+    // Si el resultado es un mensaje da error, redirigir con el mensaje
     if ($resultado !== true) {
         header("Location: ../views/list.php?error=" . urlencode($resultado)); // Redirigir con el mensaje de error
         exit;
+    } else {
+        header("Location: ../views/list.php?success=1" . urlencode($resultado));
+        exit;
     }
-
-    // Redirigir si la eliminación fue exitosa
-    header("Location: list.php");
-    exit;
 }

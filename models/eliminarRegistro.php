@@ -80,6 +80,7 @@ class eliminarRegistro
 
         // Retornar el resultado de la eliminación
         if ($resultadoEliminacion) {
+            echo "Eliminacion Exitosa al eliminar el director con ID $id.";
             return true; // Eliminación exitosa
         } else {
             echo "Error al eliminar el director con ID $id.";
