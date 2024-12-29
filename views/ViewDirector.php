@@ -2,7 +2,7 @@
 require_once('../controllers/PlatformController.php');
 require_once('../controllers/eliminarDirectorController.php');
 
-// Aquí asumo que el controlador ya te pasa $data, así que accedes directamente a las listas
+// Aquí el controlador ya te pasa $data, así que accedes directamente a las listas
 $DirectList = $data['platformDirect'];
 
 // Verificar si hay un mensaje de error en la URL

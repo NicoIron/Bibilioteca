@@ -9,7 +9,7 @@ function listSeries()
     $model = new PlatForm();
 
     // Obtener la conexión a la base de datos desde el método initDB()
-    $conn = $model->initDB();
+    //$conn = $model->initDB();
 
     // Consultar la lista de directores, plataformas, actores
     $peliculaList = $model->consultDirector();

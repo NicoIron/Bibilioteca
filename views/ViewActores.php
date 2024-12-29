@@ -1,8 +1,8 @@
 <?php
-require_once('../controllers/ActorController.php');  // Controlador para manejar la lógica de actores
+require_once('../controllers/actorController.php');  // Controlador para manejar la lógica de actores
 
 // Aquí asumo que el controlador te pasa los datos, así que accedes directamente a la lista
-$ActorList = $data['actorList'];
+$ActorList = $data['platFormActor'];
 
 // Verificar si hay un mensaje de error o éxito en la URL
 $errorMessage = isset($_GET['error']) ? $_GET['error'] : '';
@@ -60,21 +60,7 @@ $successMessage = isset($_GET['success']) ? '¡Actor eliminado con éxito!' : ''
 
     <div class="container">
         <h2 class="form-title">Listado De Actores</h2>
-
-        <!-- Mostrar mensaje de error o éxito -->
-        <?php if ($errorMessage): ?>
-            <div class="alert alert-danger" role="alert">
-                <?php echo htmlspecialchars($errorMessage); ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($successMessage): ?>
-            <div class="alert alert-success" role="alert">
-                <?php echo htmlspecialchars($successMessage); ?>
-            </div>
-        <?php endif; ?>
-
-        <form action="../controllers/eliminarActorController.php" method="POST">
+        <form action="../controllers/actorController.php" method="POST">
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -85,22 +71,26 @@ $successMessage = isset($_GET['success']) ? '¡Actor eliminado con éxito!' : ''
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($ActorList as $actor): ?>
+                    <?php
+                    foreach ($ActorList as $actor) {
+                    ?>
                         <tr>
-                            <td><?php echo $actor->getId(); ?></td>
-                            <td><?php echo $actor->getName(); ?></td>
+                            <td><?php echo $actor->getIdActor(); ?></td>
+                            <td><?php echo $actor->getNameActor(); ?></td>
                             <td><?php echo $actor->getApellidoActor(); ?></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a class="btn btn-success" href="edit.php?id=<?php echo $actor->getId(); ?>">Editar</a>
+                                    <a class="btn btn-success" href="edit.php?id=<?php echo $actor->getIdActor(); ?>">Editar</a>
 
                                     <!-- Formulario de eliminación -->
-                                    <input type="hidden" name="actorId" value="<?php echo $actor->getId(); ?>" />
+                                    <input type="hidden" name="actorId" value="<?php echo $actor->getIdActor(); ?>" />
                                     <button type="submit" class="btn btn-danger" name="BorrarItemActor">Borrar</button>
                                 </div>
                             </td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php
+                    }
+                    ?>
                 </tbody>
             </table>
         </form>

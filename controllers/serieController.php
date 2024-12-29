@@ -66,7 +66,7 @@ function insertSerie($nombreSerie, $idPlataforma, $idDirector, $idActor, $idIdio
 }
 
 
-// Verificar si el formulario ha sido enviado
+// Verificar si el formulario ha sido enviado, para crear Serie
 if (isset($_POST['createBtn'])) {
     // Recoger los datos del formulario
     $nombreSerie = $_POST['nombreSerie'];
