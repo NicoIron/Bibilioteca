@@ -75,8 +75,7 @@ class PlatFormActorModel
     {
         // Crea una instancia de la clase PlatForm y llama a la función de conexión
         $iniciaDB = new PlatForm();
-        $mysqli = $iniciaDB->initDB();  // Corregido aquí, no necesitas $this
-
+        $mysqli = $iniciaDB->initDB();
         $query = $mysqli->query("SELECT * FROM Actores");
         $listActores = [];
 
@@ -93,5 +92,65 @@ class PlatFormActorModel
 
         $mysqli->close();
         return $listActores;
+    }
+
+    function VerificarRelacionesActor($idActor)
+    {
+        $iniciaDB = new PlatForm();
+        $mysqli = $iniciaDB->initDB();
+
+        $sentencia = $mysqli->prepare("SELECT COUNT(*) AS total FROM Series WHERE IDActores_serie = ?");
+        $sentencia->bind_param('i', $idActor);
+
+        // Ejecutar la consulta
+        if (!$sentencia->execute()) {
+            echo "Error al ejecutar la consulta de verificación de series: " . $mysqli->error;
+            return false;
+        }
+
+        // Obtener el resultado de la consulta
+        $resultado = $sentencia->get_result();
+        $registro = $resultado->fetch_assoc();
+        $sentencia->close();
+
+        // Si hay series asociadas, retornar true
+        return $registro['total'] > 0;
+    }
+
+    function eliminarActor($idActor)
+    {
+
+        $iniciaDB = new PlatForm();
+        $mysqli = $iniciaDB->initDB();
+
+        $sentencia  = $mysqli->prepare("SELECT COUNT(*) AS total from Actores where ID_Actor = ?");
+        $sentencia->bind_param('i', $idActor);
+
+        //EJECUTAR CONSULTA
+        if (!$sentencia->execute()) {
+            return false;
+        }
+        $resultado = $sentencia->get_result();
+        $arrayList = $resultado->fetch_assoc();
+        $sentencia->close();
+
+        if ($arrayList['total'] == 0) {
+            echo "No se encontro Actor a eliminar con el ID $idActor: ";
+            return false;
+        } else {
+            $sentencia = $mysqli->prepare("DELETE FROM Actores where ID_Actor = ?");
+            $sentencia->bind_param('i', $idActor);
+
+            $resultadoEliminacion = $sentencia->execute();
+            $sentencia->close();
+
+            if ($resultadoEliminacion) {
+                echo "Eliminacion exitosa del actor $idActor";
+                return true;
+            } else {
+                echo "Error al eliminar $idActor ";
+                return false;
+            }
+        }
     }
 }

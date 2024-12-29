@@ -60,6 +60,19 @@ $successMessage = isset($_GET['success']) ? '¡Actor eliminado con éxito!' : ''
 
     <div class="container">
         <h2 class="form-title">Listado De Actores</h2>
+        <!-- Mostrar mensaje de error si existe -->
+        <?php if ($errorMessage): ?>
+            <div class="alert alert-danger" role="alert">
+                <?php echo htmlspecialchars($errorMessage); ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Mostrar mensaje de éxito si existe -->
+        <?php if ($successMessage): ?>
+            <div class="alert alert-success" role="alert">
+                <?php echo htmlspecialchars($successMessage); ?>
+            </div>
+        <?php endif; ?>
         <form action="../controllers/actorController.php" method="POST">
             <table class="table table-striped table-hover">
                 <thead>
@@ -83,7 +96,7 @@ $successMessage = isset($_GET['success']) ? '¡Actor eliminado con éxito!' : ''
                                     <a class="btn btn-success" href="edit.php?id=<?php echo $actor->getIdActor(); ?>">Editar</a>
 
                                     <!-- Formulario de eliminación -->
-                                    <input type="hidden" name="actorId" value="<?php echo $actor->getIdActor(); ?>" />
+                                    <input type="hidden" name="actorIdBorrar" value="<?php echo $actor->getIdActor(); ?>" />
                                     <button type="submit" class="btn btn-danger" name="BorrarItemActor">Borrar</button>
                                 </div>
                             </td>
