@@ -154,5 +154,83 @@ class PlatFormActorModel
         }
     }
 
-    function actualizarActor() {}
+    public function actualizarActor($actorId, $nombreActor, $apellidoActor, $fechaNacimiento, $nacionalidad)
+    {
+        $iniciaDB = new PlatForm();
+        $mysqli = $iniciaDB->initDB();
+        // Consulta para actualizar los datos del actor
+        $query = "UPDATE Actores SET 
+                    Nombre_Actor = ?, 
+                    Apellidos_Actor = ?, 
+                    FechaNacimiento_Actor = ?, 
+                    Nacionalidad_Actor = ? 
+                  WHERE ID_Actor = ?";
+
+        if ($sentencia = $mysqli->prepare($query)) {
+            // Vinculamos los parámetros y ejecutamos la consulta
+            $sentencia->bind_param("ssssi", $nombreActor, $apellidoActor, $fechaNacimiento, $nacionalidad, $actorId);
+            $sentencia->execute();
+            return $sentencia->affected_rows > 0;
+            $sentencia->close();
+        }
+        return false;
+    }
+
+
+    public function cargarActorPorId($actorId)
+    {
+        $iniciaDB = new PlatForm();
+        $mysqli = $iniciaDB->initDB();
+
+        // Consulta SQL para obtener el actor por ID
+        $query = "SELECT * FROM Actores WHERE ID_Actor = ?";
+        if ($sentencia = $mysqli->prepare($query)) {
+            $sentencia->bind_param("i", $actorId);  // Vinculamos el parámetro con el ID del actor
+            $sentencia->execute();
+            $result = $sentencia->get_result();
+
+            // Verificar si se encontró el actor
+            if ($actorData = $result->fetch_assoc()) {
+                // Crear y devolver un objeto PlatFormActorModel con los datos obtenidos
+                return new PlatFormActorModel(
+                    $actorData["ID_Actor"],
+                    $actorData["Nombre_Actor"],
+                    $actorData["Apellidos_Actor"],
+                    $actorData["FechaNacimiento_Actor"],
+                    $actorData["Nacionalidad_Actor"]
+                );
+            }
+            $sentencia->close();
+        }
+        return null;  // Si no se encuentra el actor, devolver null
+    }
+
+
+    // modelo (PlatFormActorModel.php)
+    public function getActorById($actorId)
+    {
+        $iniciaDB = new PlatForm();
+        $mysqli = $iniciaDB->initDB();
+
+        // Consulta SQL para obtener un solo actor por su ID
+        $query = "SELECT * FROM Actores WHERE ID_Actor = ?";
+
+        if ($sentencia = $mysqli->prepare($query)) {
+            $sentencia->bind_param("i", $actorId);
+            $sentencia->execute();
+
+            // Obtener los resultados de la consulta
+            $resultado = $sentencia->get_result();
+
+            // Verificar si el actor fue encontrado
+            if ($resultado->num_rows > 0) {
+                // Retornar el actor
+                return $resultado->fetch_object(); // O usar fetch_assoc() dependiendo de cómo quieras los resultados
+            } else {
+                return null; // Si no se encuentra el actor
+            }
+        }
+
+        return null;
+    }
 }

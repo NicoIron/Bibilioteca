@@ -8,7 +8,6 @@ function consultarActores()
 {
     $model = new PlatFormActorModel();
 
-    //consultar Lista de Actores
     $platFormActor = $model->listActor();
 
     return [
@@ -39,12 +38,6 @@ function eliminarActores($variConvertidaId)
     return true;
 }
 
-if (isset($_GET['actorIdEditar'])) {
-    $actorId = $_GET['actorIdEditar'];
-    // Aquí debes cargar los datos del actor desde la base de datos con el ID
-    $actor = $model->getActorById($actorId);  // Usando un método para obtener los datos
-}
-
 
 
 if (isset($_POST['BorrarItemActor']) && isset($_POST['actorIdBorrar'])) {
@@ -54,10 +47,50 @@ if (isset($_POST['BorrarItemActor']) && isset($_POST['actorIdBorrar'])) {
     $resultado = eliminarActores($variConvertidaId);
 
     if ($resultado !== true) {
-        header("Location: ../views/ViewActores.php?error=" . urlencode($resultado)); // Redirigir con el mensaje de error
+        header("Location: ../views/ViewActores.php?error=" . urlencode($resultado));
         exit;
     } else {
         header("Location: ../views/ViewActores.php?success=1" . urlencode($resultado));
         exit;
     }
+}
+
+
+// Actualizar register_shutdown_function
+
+
+if (isset($_GET['actorIdEditar'])) {
+    $actorId = $_GET['actorIdEditar'];
+    $actorModel = new PlatFormActorModel();
+
+    $actorParaEditar = $actorModel->cargarActorPorId($actorId);
+
+    // Verificar si el actor fue encontrado
+    if ($actorParaEditar) {
+        // Ahora puedes pasar $actorParaEditar a la vista para mostrar sus datos
+        include('../views/ViewActores.php');
+    } else {
+        // Si no se encuentra el actor, redirigir o mostrar un mensaje
+        echo "Actor no encontrado.";
+    }
+}
+
+
+
+// Verificar si el formulario de actualización fue enviado
+if (isset($_POST['ActualizarActor'])) {
+    // Obtén los datos del formulario
+    $actorId = $_POST['actorId'];
+    $nombreActor = $_POST['nombreActor'];
+    $apellidoActor = $_POST['apellidoActor'];
+    $fechaNacimiento = $_POST['fechaNacimiento'];
+    $nacionalidad = $_POST['nacionalidad'];
+
+    // Llama al método para actualizar el actor
+    $actorModel = new PlatFormActorModel();
+    $actorModel->actualizarActor($actorId, $nombreActor, $apellidoActor, $fechaNacimiento, $nacionalidad);
+
+    // Redirige o muestra un mensaje de éxito
+    header("Location: ../views/ViewActores.php?success=true");
+    exit();
 }
