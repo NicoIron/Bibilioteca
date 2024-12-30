@@ -92,28 +92,32 @@ $successMessage = isset($_GET['success']) ? '¡Actor eliminado con éxito!' : ''
                             <td><?php echo $actor->getNameActor(); ?></td>
                             <td><?php echo $actor->getApellidoActor(); ?></td>
                             <td>
-                                <div class="btn-group" role="group" aria-label="Basic example">
-                                    <a class="btn btn-success" href="edit.php?id=<?php echo $actor->getIdActor(); ?>">Editar</a>
-
-                                    <!-- Formulario de eliminación -->
+                                <form action="../controllers/actorController.php" method="GET">
+                                    <!-- Pasamos el ID del actor como parámetro en la URL -->
+                                    <input type="hidden" name="actorIdEditar" value="<?php echo $actor->getIdActor(); ?>" />
+                                    <button type="submit" class="btn btn-warning" name="EditarItemActor">Editar</button>
+                                </form>
+                                <!-- Formulario de eliminación -->
+                                <form action="../controllers/actorController.php" method="POST">
                                     <input type="hidden" name="actorIdBorrar" value="<?php echo $actor->getIdActor(); ?>" />
-                                    <button type="submit" class="btn btn-danger" name="BorrarItemActor">Borrar</button>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php
-                    }
-                    ?>
-                </tbody>
-            </table>
-        </form>
-
-        <div class="d-grid gap-2">
-            <a href="../index.html" class="btn btn-secondary">Volver a la Página Principal</a>
-        </div>
+                                    <button type="submit" class="btn btn-danger" name="BorrarItemActor" value="1">Borrar</button>
+                                </form>
     </div>
+    </td>
+    </tr>
+<?php
+                    }
+?>
+</tbody>
+</table>
+</form>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<div class="d-grid gap-2">
+    <a href="../index.html" class="btn btn-secondary">Volver a la Página Principal</a>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

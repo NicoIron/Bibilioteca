@@ -153,4 +153,6 @@ class PlatFormActorModel
             }
         }
     }
+
+    function actualizarActor() {}
 }

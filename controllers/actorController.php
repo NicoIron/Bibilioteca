@@ -39,6 +39,13 @@ function eliminarActores($variConvertidaId)
     return true;
 }
 
+if (isset($_GET['actorIdEditar'])) {
+    $actorId = $_GET['actorIdEditar'];
+    // Aquí debes cargar los datos del actor desde la base de datos con el ID
+    $actor = $model->getActorById($actorId);  // Usando un método para obtener los datos
+}
+
+
 
 if (isset($_POST['BorrarItemActor']) && isset($_POST['actorIdBorrar'])) {
     $borrarActorId = $_POST['actorIdBorrar'];
