@@ -6,7 +6,8 @@ $ActorList = $data['platFormActor'];
 
 // Verificar si hay un mensaje de error o éxito en la URL
 $errorMessage = isset($_GET['error']) ? $_GET['error'] : '';
-$successMessage = isset($_GET['success']) ? '¡Actor eliminado con éxito!' : '';
+$successMessageActualizar = isset($_GET['successActualizar']) ? $_GET['successActualizar'] : '';
+$successMessageEliminar = isset($_GET['success']) ? $_GET['success'] : '';
 
 // Verificar si hay un actor a editar a partir del ID en la URL
 $actorIdEditar = isset($_GET['actorIdEditar']) ? $_GET['actorIdEditar'] : null;
@@ -85,11 +86,20 @@ if ($actorIdEditar) {
         }
         ?>
 
-        <!-- Mostrar mensaje de éxito si existe -->
+        <!-- Mostrar mensaje de éxito para actualización -->
         <?php
-        if ($successMessage) {
+        if ($successMessageActualizar) {
         ?>
-            <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($successMessage); ?></div>
+            <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($successMessageActualizar); ?></div>
+        <?php
+        }
+        ?>
+
+        <!-- Mostrar mensaje de éxito para eliminación -->
+        <?php
+        if ($successMessageEliminar) {
+        ?>
+            <div class="alert alert-success" role="alert"><?php echo htmlspecialchars($successMessageEliminar); ?></div>
         <?php
         }
         ?>

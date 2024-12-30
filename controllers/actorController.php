@@ -50,7 +50,7 @@ if (isset($_POST['BorrarItemActor']) && isset($_POST['actorIdBorrar'])) {
         header("Location: ../views/ViewActores.php?error=" . urlencode($resultado));
         exit;
     } else {
-        header("Location: ../views/ViewActores.php?success=1" . urlencode($resultado));
+        header("Location: ../views/ViewActores.php?success=Eliminacion Exitosa" . urlencode($resultado));
         exit;
     }
 }
@@ -69,9 +69,11 @@ if (isset($_GET['actorIdEditar'])) {
     if ($actorParaEditar) {
         // Ahora puedes pasar $actorParaEditar a la vista para mostrar sus datos
         include('../views/ViewActores.php');
+        exit;
     } else {
         // Si no se encuentra el actor, redirigir o mostrar un mensaje
         echo "Actor no encontrado.";
+        exit;
     }
 }
 
@@ -91,6 +93,6 @@ if (isset($_POST['ActualizarActor'])) {
     $actorModel->actualizarActor($actorId, $nombreActor, $apellidoActor, $fechaNacimiento, $nacionalidad);
 
     // Redirige o muestra un mensaje de éxito
-    header("Location: ../views/ViewActores.php?success=true");
+    header("Location: ../views/ViewActores.php?successActualizar=Actualización Exitosa");
     exit();
 }
